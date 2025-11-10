@@ -59,7 +59,7 @@ let idCounter = 7;
 //=======================================
 /*Produkter ska minst bestå av:
     -Namn
-    -Antal (i lager) (Så när man uppdaterar ska man addera? eller bara ändra? nytt id eller ej?)
+    -Antal (i lager) 
     -Pris
     -Kategori (sträng eller enum)
 */
@@ -260,6 +260,30 @@ app.put("/products/:id", (req, res) => {
 
 });
 
+// DELETE /products/:id - Radera en produkt
+// ============================================
+app.delete("/products/:id", (req, res) => {
+  const id = Number.parseInt(req.params.id);
+
+  // Valdidering: Om användaren skriver in något som inte är ett nummer
+  if (Number.isNaN(id)) {
+    res.status(400).json({ error: "Id param must be a number" });
+    return;
+  }
+
+  //Loopa igenom arrayen för att hitta produkten med matchade id
+  for (let i = 0; i < products.length; i++) {
+    const product = products[i];
+    if (product.id === id) {
+      products.splice(i, 1);
+      // splice(index, antal) tar bort element från arrayen
+      // splice(i, 1) betyder "ta bort 1 element på position i"
+      res.status(204).json({ message: "Product was removed successfully" });
+      return;
+    }
+  }
+  res.status(404).json({ error: "No product has been deleted" });
+});
 
 
 app.listen(3000, () => {
