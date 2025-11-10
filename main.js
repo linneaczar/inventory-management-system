@@ -121,7 +121,7 @@ app.post("/products", (req, res) => {
     return;
   }
 
-   if (category.trim().length === 0) {
+  if (category.trim().length === 0) {
     res.status(400).json({
       error: "Property 'category' can not be blank"
     });
@@ -131,7 +131,7 @@ app.post("/products", (req, res) => {
   //Validering 4: Kolla att quantity och price är nummer och positiva tal
 
   const parsedQuantity = Number.parseInt(quantity);
-  const parsedPrice= Number.parseFloat(price);
+  const parsedPrice = Number.parseFloat(price);
 
   if (Number.isNaN(parsedQuantity)) {
     res.status(400).json({ error: "Property 'quantity' must be a number" });
@@ -148,7 +148,7 @@ app.post("/products", (req, res) => {
     return;
   }
 
-    if (parsedPrice <= 0) {
+  if (parsedPrice <= 0) {
     res.status(400).json({ error: "Property 'price' must be a greater than 0" });
     return;
   }
@@ -174,30 +174,93 @@ app.post("/products", (req, res) => {
 
 app.get("/products", (req, res) => {
   res.json(products);
-}); 
+});
 
 //GET/products/:id - Hämta en specifik produkt
 //=======================================
 
 app.get("/products/:id", (req, res) => {
-const id = Number.parseInt(req.params.id);
+  const id = Number.parseInt(req.params.id);
 
-// Valdidering: Om användaren skriver in något som inte är ett nummer
-if (Number.isNaN(id)) {
-  res.status(400).json({ error: "Id param must be a number"});
-  return;
-};
+  // Valdidering: Om användaren skriver in något som inte är ett nummer
+  if (Number.isNaN(id)) {
+    res.status(400).json({ error: "Id param must be a number" });
+    return;
+  }
 
-//Söker i arrayen efter en produkt med matchande id
-const product = product.find(all => all.id === id);
-if (product === undefined) {
-  res.status(404).json({ error: "Product with id not found"});
-  return;
-};
+  //Söker i arrayen efter en produkt med matchande id
+  const product = products.find(all => all.id === id);
+  if (product === undefined) {
+    res.status(404).json({ error: "Product with id not found" });
+    return;
+  }
 
-res.json(product);
+  res.json(product);
 
 });
+
+//PUT/products/:id - Uppdatera en befintlig produkt
+//=======================================
+
+app.put("/products/:id", (req, res) => {
+  const id = Number.parseInt(req.params.id);
+
+  // Valdidering: Om användaren skriver in något som inte är ett nummer
+  if (Number.isNaN(id)) {
+    res.status(400).json({ error: "Id param must be a number" });
+    return;
+  }
+
+  //Letar upp produkten 
+  const productIndex = products.findIndex(p => p.id === id);
+  if (productIndex === -1) {
+    res.status(404).json({ error: "Product not found" });
+    return;
+  }
+
+  const { title, quantity, price, category } = req.body;
+  const product = products[productIndex];
+
+  //Validering berorende på vad som ska ändras
+  if (title !== undefined) {
+    if (typeof title !== "string" || title.trim().length === 0) {
+      res.status(400).json({ error: "Property 'title' must be a non-empty string" });
+      return;
+    }
+    product.title = title;
+  }
+
+  if (quantity !== undefined) {
+    const parsedQuantity = Number.parseInt(quantity);
+    if (Number.isNaN(parsedQuantity) || parsedQuantity <= 0) {
+      res.status(400).json({ error: "Property 'quantity' must be a number > 0" });
+      return;
+    }
+    product.quantity = parsedQuantity;
+  }
+
+  if (price !== undefined) {
+    const parsedPrice = Number.parseFloat(price);
+    if (Number.isNaN(parsedPrice) || parsedPrice <= 0) {
+      res.status(400).json({ error: "Property 'price' must be a number > 0" });
+      return;
+    }
+    product.price = parsedPrice;
+  }
+
+  if (category !== undefined) {
+    if (typeof category !== "string" || category.trim().length === 0) {
+      res.status(400).json({ error: "Property 'category' must be a non-empty string" });
+      return;
+    }
+    product.category = category;
+  }
+
+  res.status(200).json({ message: "Product updated successfully", product });
+
+});
+
+
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
