@@ -1,0 +1,3 @@
+import pool from "../config/db.js";
+
+//HÄR SKAPAR JAG FUNKTIONERNA FÖR DATABASEN OCH EXPORTERAR DEM
