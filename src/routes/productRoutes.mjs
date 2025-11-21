@@ -11,7 +11,7 @@ const router = express.Router();
 //POST/producs - Skapa en ny produkt 
 //=======================================
 
-router.post("/products", async (req, res) => {
+router.post("/", async (req, res) => {
 
   let { title, quantity, price, category } = req.body;
 
@@ -109,7 +109,7 @@ router.post("/products", async (req, res) => {
 //GET/products - Hämta alla produkter
 //=======================================
 
-router.get("/products", async (req, res) => {
+router.get("/", async (req, res) => {
      const products = await getAllProducts();
 
   res.json(products);
@@ -118,7 +118,7 @@ router.get("/products", async (req, res) => {
 //GET/products/:id - Hämta en specifik produkt
 //=======================================
 
-router.get("/products/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const id = Number.parseInt(req.params.id);
 
   // Valdidering: Om användaren skriver in något som inte är ett nummer
@@ -141,7 +141,7 @@ const product = await getProductById(id);
 //PUT/products/:id - Uppdatera en befintlig produkt
 //=======================================
 
-router.put("/products/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const id = Number.parseInt(req.params.id);
 
   // Valdidering: Om användaren skriver in något som inte är ett nummer
@@ -196,7 +196,7 @@ router.put("/products/:id", async (req, res) => {
 
 // DELETE /products/:id - Radera en produkt
 // ============================================
-router.delete("/products/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const id = Number.parseInt(req.params.id);
 
   // Valdidering: Om användaren skriver in något som inte är ett nummer

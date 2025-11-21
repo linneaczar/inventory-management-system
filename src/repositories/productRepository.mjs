@@ -3,16 +3,21 @@ import pool from "../config/db.mjs";
 //HÄR SKAPAR JAG FUNKTIONERNA FÖR DATABASEN OCH EXPORTERAR DEM
 
 //Skapar en tabell i PostgresSQL
-export async function createTable() {
+export async function createProductTable() {
   await pool.query(
   `CREATE TABLE IF NOT EXISTS products(
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   quantity INT NOT NULL,
-  price DECIMAL(10,2) NOT NULL
+  price DECIMAL(10,2) NOT NULL, 
+  category TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  supplier_id INTEGER REFERENCES suppliers(id)
   )`, []
   );
 }
+
+//Lägg till if-satser för error likt vad han gör i blog 
 
 export async function getAllProducts() {
     const result = await pool.query("SELECT * FROM products");

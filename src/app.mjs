@@ -5,9 +5,8 @@ import productRoutes from "./routes/productRoutes.mjs";
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 
-
-//Funktionen för att skapa en tabell (produkt)
-// import { createTable } from "..productRepository.mjs" // vart ska jag anropa den är frågan??????????
+import { createSupplierTable } from "..supplierRepository.mjs" 
+import { createProductTable } from "..productRepository.mjs" 
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 3000;
@@ -17,6 +16,9 @@ app.use(express.json());
 
 app.use("/products", productRoutes);
 //lägg till för suppliers
+
+createSupplierTable();
+createProductTable();
 
 //lägg till Global error handler
 
