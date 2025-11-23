@@ -5,7 +5,7 @@ import pool from "../config/db.mjs";
 //Skapar en tabell i PostgresSQL
 export async function createProductTable() {
   await pool.query(
-  `CREATE TABLE IF NOT EXISTS products(
+    `CREATE TABLE IF NOT EXISTS products(
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   quantity INT NOT NULL,
@@ -17,15 +17,22 @@ export async function createProductTable() {
   );
 }
 
-//Lägg till if-satser för error likt vad han gör i blog 
-
 export async function getAllProducts() {
-    const result = await pool.query("SELECT * FROM products");
-    return result.rows;
+  const result = await pool.query("SELECT * FROM products");
+
+  if (!result.rows) {
+    throw new Error("Failed to get products");
+  }
+  return result.rows;
 }
 
 export async function getProductById(id) {
   const result = await pool.query("SELECT * FROM products WHERE id = $1", [id]);
+
+  if (!result.rows || result.rowCount !== 1) {
+    return null;
+  }
+
   return result.rows[0];
 }
 
@@ -34,6 +41,9 @@ export async function createNewProduct(title, quantity, price, category) {
     "INSERT INTO products (title, quantity, price, category) VALUES ($1, $2, $3, $4) RETURNING *",
     [title, quantity, price, category]
   );
+  if (result.rowCount !== 1) {
+    throw new Error("Failed to create product");
+  }
   return result.rows[0];
 }
 
@@ -42,13 +52,14 @@ export async function updateProduct(title, quantity, price, category, id) {
     "UPDATE products SET title = $1, quantity =$2, price = $3, category =$4 WHERE id = $5 RETURNING *",
     [title, quantity, price, category, id]
   );
-  return result.rows[0];
+  return result.rowCount > 0;
 }
 
 export async function deleteProduct(id) {
   const result = await pool.query("DELETE FROM products WHERE id = $1", [id]);
- if (result.rowCount === 0) {
+  if (result.rowCount === 0) {
     res.status(404).send();
     return;
- }}
+  }
+}
 
