@@ -2,6 +2,7 @@ import express from "express";
 
 //importerar alla databas-funktioner
 import { getAllProducts, getProductById, createNewProduct, deleteProduct, updateProduct } from "../repositories/productRepository.mjs"  //importera även update och delete!!
+import { validateNumber, validateString } from "../utilities/validation.mjs";
 
 const router = express.Router();
 
