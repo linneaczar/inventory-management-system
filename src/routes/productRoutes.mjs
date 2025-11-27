@@ -1,7 +1,7 @@
 import express from "express";
 
 //importerar alla databas-funktioner
-import { getAllProducts, getProductById, createNewProduct, deleteProduct, updateProduct } from "../repositories/productRepository.mjs"  //importera även update och delete!!
+import { getAllProducts, getProductById, createNewProduct, deleteProduct, updateProduct, getProductsByCategory } from "../repositories/productRepository.mjs"  //importera även update och delete!!
 import { validateNumber, validateString } from "../utilities/validation.mjs";
 
 const router = express.Router();
@@ -87,6 +87,22 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "An unexpected error occurred." });
     return;
   }
+});
+
+//GET/products/search?category=sökord - Söker efter produkter baserat på kategori
+//=======================================
+
+router.get("/search", async (req, res) => {
+  const categorySearch = req.query.category; // Hämtar "category" från query parameters
+
+  if (!validateString(categorySearch)) {
+    res.status(400).json({ error: "Category must be a string" });
+    return;
+  }
+
+  // Söker i databasen efter produkter som matchar kategorin
+  const products = await getProductsByCategory(categorySearch);
+  res.json(products);
 });
 
 //GET/products/:id - Hämta en specifik produkt

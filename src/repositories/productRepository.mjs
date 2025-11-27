@@ -1,7 +1,5 @@
 import pool from "../config/db.mjs"
 
-//lägga till så att man ser supplier_name på alla?? med left join??? 
-
 //Skapar en tabell i PostgresSQL
 export async function createProductTable() {
   await pool.query(
@@ -47,6 +45,23 @@ export async function getProductById(id) {
   }
 
   return result.rows[0];
+}
+
+// Söker efter produkt vars kateogori innehåller en viss text
+export async function getProductsByCategory(category) {
+  // LOWER() konverterar till gemener för case-insensitive sökning
+  // LIKE med % före och efter söker efter texten var som helst i titeln
+  const result = await pool.query(
+    "SELECT * FROM products WHERE LOWER(category) LIKE $1",
+    ["%" + category.toLowerCase() + "%"]
+  );
+
+  // Om inga resultat hittas, returnera tom array
+  if (result.rows.length === 0) {
+    return [];
+  }
+
+  return result.rows;
 }
 
 export async function createNewProduct(title, quantity, price, category, supplierId) {
