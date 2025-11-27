@@ -8,7 +8,7 @@ export async function createSupplierTable() {
   supplier_name VARCHAR(100) NOT NULL,
   contact_person VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL,
-  phone_number INT NOT NULL,
+  phone_number TEXT NOT NULL,
   country TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`, []
@@ -54,7 +54,8 @@ export async function getSupplierById(id) {
 
 export async function getProductOfSupplierById(id) {
     const result = await pool.query(`SELECT products.*, 
-    suppliers.name AS supplier_name FROM products
+    suppliers.supplier_name,
+    suppliers.country FROM products
     JOIN suppliers ON suppliers.id = products.supplier_id WHERE suppliers.id = $1`, [id]);
 
      if (!result.rows) {
@@ -76,7 +77,7 @@ export async function createNewSupplier(supplierName, contactPerson, email, phon
 
 export async function updateSupplier(supplierName, contactPerson, email, phoneNumber, country, id) {
     const result = await pool.query(
-        "UPDATE suppliers SET supplier_name = $1, contact_person =$2, email = $3, phone_number =$4, country = $5 WHERE id = $5 RETURNING *",
+        "UPDATE suppliers SET supplier_name = $1, contact_person =$2, email = $3, phone_number =$4, country = $5 WHERE id = $6 RETURNING *",
         [supplierName, contactPerson, email, phoneNumber, country, id]
     );
       // Om ingen rad uppdaterades (id hittades inte)

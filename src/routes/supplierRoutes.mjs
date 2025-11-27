@@ -1,6 +1,7 @@
 import express from "express";
 
 import { getAllSuppliers, getSupplierById, getProductOfSupplierById, createNewSupplier, updateSupplier, deleteSupplier } from "../repositories/supplierRepository.mjs";
+import { validateNumber, validateString } from "../utilities/validation.mjs";
 
 const router = express.Router();
 
@@ -57,10 +58,10 @@ router.post("/", async (req, res) => {
     return;
   }
 
-  // Validerar att phoneNumber är ett nummer och finns med
-  if (!validateNumber(phoneNumber)) {
+  // Validerar att phoneNumber är en sträng och inte undefined/null
+  if (!validateString(phoneNumber)) {
     res.status(400).json({
-      error: "Phone number must be included and be a number",
+      error: "Phone number must be included and be a string",
     });
     return;
   }
@@ -199,14 +200,13 @@ router.put("/:id", async (req, res) => {
     return;
   }
 
-  // Validerar att phoneNumber är ett nummer och finns med
-  if (!validateNumber(phoneNumber)) {
+   // Validerar att phoneNumber är en sträng och inte undefined/null
+  if (!validateString(phoneNumber)) {
     res.status(400).json({
-      error: "Phone number must be included and be a number",
+      error: "Phone number must be included and be a string",
     });
     return;
   }
-
    // Validerar att country är en sträng och inte undefined/null
   if (!validateString(country)) {
     res.status(400).json({
