@@ -1,0 +1,30 @@
+meta {
+  name: Update supplier
+  type: http
+  seq: 11
+}
+
+put {
+  url: http://localhost:3000/suppliers/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 10
+}
+
+body:json {
+  {
+    "supplierName": "Green Marke",
+    "contactPerson": "Aino Levi",
+    "email": "aino.levi@greenmarket.fi",
+    "phoneNumber": "+358 44 123 55 90",
+    "country": "Finland"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

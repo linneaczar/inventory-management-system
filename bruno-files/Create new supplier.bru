@@ -1,0 +1,26 @@
+meta {
+  name: Create new supplier
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:3000/suppliers
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "supplierName": "Green Market Finland",
+    "contactPerson": "Aino Virtanen",
+    "email": "aino.virtanen@greenmarket.fi",
+    "phoneNumber": "+358 44 123 55 90",
+    "country": "Finland"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

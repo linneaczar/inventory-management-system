@@ -1,0 +1,30 @@
+meta {
+  name: Update product
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:3000/products/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 2
+}
+
+body:json {
+  {
+    "title" : "Cucumber",
+    "quantity" : 5,
+    "price" : 13.00,
+    "category" : "Vegetables",
+    "supplierId" : 1
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

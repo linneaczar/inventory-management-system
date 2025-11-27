@@ -1,0 +1,20 @@
+meta {
+  name: Get products by category-search
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:3000/products/search?category=dry
+  body: none
+  auth: inherit
+}
+
+params:query {
+  category: dry
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

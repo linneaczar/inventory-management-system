@@ -1,0 +1,26 @@
+meta {
+  name: Get all suppliers
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:3000/suppliers
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "supplierName" : "ICA",
+    "contactPerson" : "Lilly Karlsson",
+    "email" : "lilly.karlsson@ica.se",
+    "phoneNumber" : 76030254 ,
+    "country" : "Sweden"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

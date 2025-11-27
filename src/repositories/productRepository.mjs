@@ -10,7 +10,7 @@ export async function createProductTable() {
   price DECIMAL(10,2) NOT NULL, 
   category TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  supplier_id INTEGER REFERENCES suppliers(id)
+  supplier_id INTEGER REFERENCES suppliers(id) ON DELETE CASCADE
   )`, []
   );
 }
