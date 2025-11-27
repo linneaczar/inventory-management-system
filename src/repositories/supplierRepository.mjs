@@ -1,4 +1,4 @@
-import pool from "../config/db.js";
+import pool from "../config/db.mjs";
 
 //Skapar en tabell i PostgresSQL 
 export async function createSupplierTable() {
@@ -79,13 +79,16 @@ export async function updateSupplier(supplierName, contactPerson, email, phoneNu
         "UPDATE suppliers SET supplier_name = $1, contact_person =$2, email = $3, phone_number =$4, country = $5 WHERE id = $5 RETURNING *",
         [supplierName, contactPerson, email, phoneNumber, country, id]
     );
-    return result.rowCount > 0;
+      // Om ingen rad uppdaterades (id hittades inte)
+  if (result.rowCount === 0) {
+    return null;
+  }
+
+  return result.rows[0];
 }
 
 export async function deleteSupplier(id) {
     const result = await pool.query("DELETE FROM suppliers WHERE id = $1", [id]);
-    if (result.rowCount === 0) {
-        res.status(404).send();
-        return;
-    }
+  
+    return result.rowCount;
 }
